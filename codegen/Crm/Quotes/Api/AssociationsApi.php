@@ -455,6 +455,356 @@ class AssociationsApi
     }
 
     /**
+     * Operation create
+     *
+     * Associate a line item with another object
+     *
+     * @param  string $quote_id quote_id (required)
+     * @param  string $to_object_type to_object_type (required)
+     * @param  string $to_object_id to_object_id (required)
+     * @param  string $association_type association_type (required)
+     *
+     * @throws \HubSpot\Client\Crm\Quotes\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return \HubSpot\Client\Crm\Quotes\Model\SimplePublicObjectWithAssociations|\HubSpot\Client\Crm\Quotes\Model\Error
+     */
+    public function create($quote_id, $to_object_type, $to_object_id, $association_type)
+    {
+        list($response) = $this->createWithHttpInfo($quote_id, $to_object_type, $to_object_id, $association_type);
+        return $response;
+    }
+
+    /**
+     * Operation createWithHttpInfo
+     *
+     * Associate a line item with another object
+     *
+     * @param  string $quote_id (required)
+     * @param  string $to_object_type (required)
+     * @param  string $to_object_id (required)
+     * @param  string $association_type (required)
+     *
+     * @throws \HubSpot\Client\Crm\Quotes\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \HubSpot\Client\Crm\Quotes\Model\SimplePublicObjectWithAssociations|\HubSpot\Client\Crm\Quotes\Model\Error, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function createWithHttpInfo($quote_id, $to_object_type, $to_object_id, $association_type)
+    {
+        $request = $this->createRequest($quote_id, $to_object_type, $to_object_id, $association_type);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            switch($statusCode) {
+                case 200:
+                    if ('\HubSpot\Client\Crm\Quotes\Model\SimplePublicObjectWithAssociations' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\HubSpot\Client\Crm\Quotes\Model\SimplePublicObjectWithAssociations', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                default:
+                    if ('\HubSpot\Client\Crm\Quotes\Model\Error' === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, '\HubSpot\Client\Crm\Quotes\Model\Error', []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+            }
+
+            $returnType = '\HubSpot\Client\Crm\Quotes\Model\SimplePublicObjectWithAssociations';
+            if ($returnType === '\SplFileObject') {
+                $content = $response->getBody(); //stream goes to serializer
+            } else {
+                $content = (string) $response->getBody();
+            }
+
+            return [
+                ObjectSerializer::deserialize($content, $returnType, []),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            ];
+
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\HubSpot\Client\Crm\Quotes\Model\SimplePublicObjectWithAssociations',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+                default:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\HubSpot\Client\Crm\Quotes\Model\Error',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    break;
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation createAsync
+     *
+     * Associate a line item with another object
+     *
+     * @param  string $quote_id (required)
+     * @param  string $to_object_type (required)
+     * @param  string $to_object_id (required)
+     * @param  string $association_type (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function createAsync($quote_id, $to_object_type, $to_object_id, $association_type)
+    {
+        return $this->createAsyncWithHttpInfo($quote_id, $to_object_type, $to_object_id, $association_type)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation createAsyncWithHttpInfo
+     *
+     * Associate a line item with another object
+     *
+     * @param  string $quote_id (required)
+     * @param  string $to_object_type (required)
+     * @param  string $to_object_id (required)
+     * @param  string $association_type (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function createAsyncWithHttpInfo($quote_id, $to_object_type, $to_object_id, $association_type)
+    {
+        $returnType = '\HubSpot\Client\Crm\Quotes\Model\SimplePublicObjectWithAssociations';
+        $request = $this->createRequest($quote_id, $to_object_type, $to_object_id, $association_type);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'create'
+     *
+     * @param  string $quote_id (required)
+     * @param  string $to_object_type (required)
+     * @param  string $to_object_id (required)
+     * @param  string $association_type (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function createRequest($quote_id, $to_object_type, $to_object_id, $association_type)
+    {
+        // verify the required parameter 'quote_id' is set
+        if ($quote_id === null || (is_array($quote_id) && count($quote_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $quote_id when calling create'
+            );
+        }
+        // verify the required parameter 'to_object_type' is set
+        if ($to_object_type === null || (is_array($to_object_type) && count($to_object_type) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $to_object_type when calling create'
+            );
+        }
+        // verify the required parameter 'to_object_id' is set
+        if ($to_object_id === null || (is_array($to_object_id) && count($to_object_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $to_object_id when calling create'
+            );
+        }
+        // verify the required parameter 'association_type' is set
+        if ($association_type === null || (is_array($association_type) && count($association_type) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $association_type when calling create'
+            );
+        }
+
+        $resourcePath = '/crm/v3/objects/quotes/{quoteId}/associations/{toObjectType}/{toObjectId}/{associationType}';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // path params
+        if ($quote_id !== null) {
+            $resourcePath = str_replace(
+                '{' . 'quoteId' . '}',
+                ObjectSerializer::toPathValue($quote_id),
+                $resourcePath
+            );
+        }
+        // path params
+        if ($to_object_type !== null) {
+            $resourcePath = str_replace(
+                '{' . 'toObjectType' . '}',
+                ObjectSerializer::toPathValue($to_object_type),
+                $resourcePath
+            );
+        }
+        // path params
+        if ($to_object_id !== null) {
+            $resourcePath = str_replace(
+                '{' . 'toObjectId' . '}',
+                ObjectSerializer::toPathValue($to_object_id),
+                $resourcePath
+            );
+        }
+        // path params
+        if ($association_type !== null) {
+            $resourcePath = str_replace(
+                '{' . 'associationType' . '}',
+                ObjectSerializer::toPathValue($association_type),
+                $resourcePath
+            );
+        }
+
+
+        if ($multipart) {
+            $headers = $this->headerSelector->selectHeadersForMultipart(
+                ['application/json', '*/*']
+            );
+        } else {
+            $headers = $this->headerSelector->selectHeaders(
+                ['application/json', '*/*'],
+                []
+            );
+        }
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif ($headers['Content-Type'] === 'application/json') {
+                $httpBody = \GuzzleHttp\json_encode($formParams);
+
+            } else {
+                // for HTTP post (form)
+                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+            }
+        }
+
+        // this endpoint requires API key authentication
+        $apiKey = $this->config->getApiKeyWithPrefix('hapikey');
+        if ($apiKey !== null) {
+            $queryParams['hapikey'] = $apiKey;
+        }
+        // this endpoint requires OAuth (access token)
+        if ($this->config->getAccessToken() !== null) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $query = \GuzzleHttp\Psr7\build_query($queryParams);
+        return new Request(
+            'PUT',
+            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Create http client option
      *
      * @throws \RuntimeException on file opening failure
